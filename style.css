@@ -29,7 +29,18 @@ html, body{
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
-  will-change: left, top, transform;
+}
+
+.bread{
+  width: var(--box);
+  height: var(--box);
+}
+
+.knife{
+  width: var(--knife-size);
+  height: var(--knife-size);
+  transform: translate(-15%, -50%) rotate(-20deg);
+}
 }
 
 /* Картинка всередині вміщується в квадрат пропорційно */
