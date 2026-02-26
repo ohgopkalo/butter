@@ -1,40 +1,60 @@
-function toggleMode(){
-  const body = document.body;
-  const btn = document.getElementById("modeToggle");
-  const dark = body.classList.toggle("dark-mode");
-  body.classList.toggle("light-mode", !dark);
-  btn.textContent = dark ? "☀️" : "🌙";
-}
-
 function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
 window.addEventListener("DOMContentLoaded", () => {
   const wrap = document.getElementById("wrapper");
-  const pet = document.getElementById("pet");
+  const pet  = document.getElementById("pet");
   if (!wrap || !pet) return;
 
-  // позиція та ціль
-  let x = window.innerWidth / 2;
-  let y = window.innerHeight / 2;
+  // поточна позиція і ціль
+  let x  = window.innerWidth / 2;
+  let y  = window.innerHeight / 2;
   let tx = x;
   let ty = y;
 
-  // курсор (для "дивиться")
-  let mx = x;
-  let my = y;
-
-  const speed = 0.10; // більше = швидше
+  // плавність руху (чим більше — тим "липкіше" і швидше)
+  const follow = 0.18;
 
   function tick(){
-    x += (tx - x) * speed;
-    y += (ty - y) * speed;
+    x += (tx - x) * follow;
+    y += (ty - y) * follow;
 
-    // щоб не виїжджало за екран (з урахуванням розміру картинки)
+    // межі екрану (щоб не обрізалось)
     const rect = pet.getBoundingClientRect();
     const halfW = rect.width / 2;
     const halfH = rect.height / 2;
 
-    const cx = clamp(x, halfW, window.innerWidth - halfW);
+    const cx = clamp(x, halfW, window.innerWidth  - halfW);
+    const cy = clamp(y, halfH, window.innerHeight - halfH);
+
+    pet.style.left = `${cx}px`;
+    pet.style.top  = `${cy}px`;
+
+    // без дзеркала/обертання — тільки центр
+    pet.style.transform = "translate(-50%, -50%)";
+
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // рух за курсором
+  wrap.addEventListener("mousemove", (e) => {
+    tx = e.clientX;
+    ty = e.clientY;
+  });
+
+  // на мобільному (тач) теж слідкує за пальцем
+  wrap.addEventListener("touchmove", (e) => {
+    const t = e.touches && e.touches[0];
+    if (!t) return;
+    tx = t.clientX;
+    ty = t.clientY;
+  }, { passive: true });
+
+  window.addEventListener("resize", () => {
+    tx = clamp(tx, 0, window.innerWidth);
+    ty = clamp(ty, 0, window.innerHeight);
+  });
+});    const cx = clamp(x, halfW, window.innerWidth - halfW);
     const cy = clamp(y, halfH, window.innerHeight - halfH);
 
     pet.style.left = `${cx}px`;
