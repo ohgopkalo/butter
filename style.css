@@ -2,7 +2,7 @@ html, body {
   margin: 0;
   width: 100%;
   height: 100%;
-  background: transparent;
+  background: #E6ADC3;
   overflow: hidden;
 }
 
@@ -10,29 +10,24 @@ html, body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: transparent;
-  cursor: none; /* ховаємо системний курсор */
+  cursor: none;
 }
 
-/* 🔥 ОДНАКОВИЙ РОЗМІР */
 .bread,
 .knife {
   position: absolute;
-  width: 120px;   /* ← міняєш тут — міняється обидва */
+  width: 80px;   /* як у попередній версії */
   height: auto;
   user-select: none;
   pointer-events: none;
-  will-change: left, top, transform;
 }
 
-/* хліб по центру */
 .bread{
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
 }
 
-/* ніж як курсор */
 .knife{
   left: 0;
   top: 0;
