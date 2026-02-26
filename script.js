@@ -7,7 +7,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const knife = document.getElementById("knife");
   if (!stage || !bread || !knife) return;
 
-  // --- Позиція курсора (ніж = курсор 1:1)
+  // --- Ніж = курсор
   let mx = window.innerWidth / 2;
   let my = window.innerHeight / 2;
 
@@ -18,16 +18,6 @@ window.addEventListener("DOMContentLoaded", () => {
     knife.style.top  = my + "px";
   });
 
-  stage.addEventListener("touchmove", (e) => {
-    const t = e.touches && e.touches[0];
-    if (!t) return;
-    mx = t.clientX;
-    my = t.clientY;
-    knife.style.left = mx + "px";
-    knife.style.top  = my + "px";
-  }, { passive: true });
-
-  // стартова позиція ножа
   knife.style.left = mx + "px";
   knife.style.top  = my + "px";
 
@@ -35,39 +25,38 @@ window.addEventListener("DOMContentLoaded", () => {
   let bx = window.innerWidth / 2;
   let by = window.innerHeight / 2;
 
-  let vx = rand(-0.5, 0.5);
-  let vy = rand(-0.5, 0.5);
+  let vx = rand(-0.6, 0.6);
+  let vy = rand(-0.6, 0.6);
 
   function animate(){
 
-    // Плавне базове плавання
+    // звичайне плавання
     vx += rand(-0.02, 0.02);
     vy += rand(-0.02, 0.02);
 
-    // --- ВТЕЧА ВІД НОЖА
     const dx = bx - mx;
     const dy = by - my;
     const dist = Math.hypot(dx, dy);
 
-    const fleeRadius = 150;   // коли ближче ніж 150px
-    const fleePower  = 0.5;   // сила втечі
+    const panicRadius = 180;   // трохи більший радіус
+    const panicForce  = 4.5;   // 🔥 СИЛЬНИЙ ривок
 
-    if (dist < fleeRadius){
+    if (dist < panicRadius){
       const nx = dx / (dist || 1);
       const ny = dy / (dist || 1);
 
-      // сильний поштовх в протилежну сторону
-      vx += nx * fleePower;
-      vy += ny * fleePower;
+      // великий імпульс в протилежну сторону
+      vx = nx * panicForce;
+      vy = ny * panicForce;
     }
-
-    // демпфування
-    vx *= 0.98;
-    vy *= 0.98;
 
     // рух
     bx += vx;
     by += vy;
+
+    // легке затухання
+    vx *= 0.97;
+    vy *= 0.97;
 
     // межі екрану
     const rect = bread.getBoundingClientRect();
@@ -79,10 +68,10 @@ window.addEventListener("DOMContentLoaded", () => {
     const minY = halfH;
     const maxY = window.innerHeight - halfH;
 
-    if (bx < minX){ bx = minX; vx *= -0.8; }
-    if (bx > maxX){ bx = maxX; vx *= -0.8; }
-    if (by < minY){ by = minY; vy *= -0.8; }
-    if (by > maxY){ by = maxY; vy *= -0.8; }
+    if (bx < minX){ bx = minX; vx *= -0.9; }
+    if (bx > maxX){ bx = maxX; vx *= -0.9; }
+    if (by < minY){ by = minY; vy *= -0.9; }
+    if (by > maxY){ by = maxY; vy *= -0.9; }
 
     bread.style.left = bx + "px";
     bread.style.top  = by + "px";
