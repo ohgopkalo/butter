@@ -2,42 +2,34 @@ function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
 window.addEventListener("DOMContentLoaded", () => {
   const stage = document.getElementById("stage");
-  const bread = document.getElementById("bread"); // це sprite-box
-  const knife = document.getElementById("knife"); // це sprite-box
+  const bread = document.getElementById("bread");
+  const knife = document.getElementById("knife");
   if (!stage || !bread || !knife) return;
 
-  // ---- НІЖ = курсор (1:1)
+  // ---- Ніж = курсор
   let mx = window.innerWidth / 2;
   let my = window.innerHeight / 2;
 
-  function setKnife(x, y){
-    mx = x; my = y;
+  stage.addEventListener("mousemove", (e) => {
+    mx = e.clientX;
+    my = e.clientY;
     knife.style.left = mx + "px";
     knife.style.top  = my + "px";
-  }
+  });
 
-  stage.addEventListener("mousemove", (e) => setKnife(e.clientX, e.clientY));
-  stage.addEventListener("touchmove", (e) => {
-    const t = e.touches && e.touches[0];
-    if (!t) return;
-    setKnife(t.clientX, t.clientY);
-  }, { passive: true });
+  knife.style.left = mx + "px";
+  knife.style.top  = my + "px";
 
-  setKnife(mx, my);
-
-  // ---- ХЛІБ = DVD рух
-  // позиція (центр)
+  // ---- Хліб (спокійний політ)
   let bx = window.innerWidth / 2;
   let by = window.innerHeight / 2;
 
-  // швидкість (пікс/кадр). Збільшиш — буде швидше “літати”
-  let vx = 3.2;
-  let vy = 2.6;
+  // В 3 рази повільніше
+  let vx = 1.0;
+  let vy = 0.8;
 
-  // щоб втеча не тригерилась щокадру
-  let panicCooldown = 0;
+  function animate(){
 
-  function tick(){
     const rect = bread.getBoundingClientRect();
     const halfW = rect.width / 2;
     const halfH = rect.height / 2;
@@ -47,56 +39,35 @@ window.addEventListener("DOMContentLoaded", () => {
     const minY = halfH;
     const maxY = window.innerHeight - halfH;
 
-    // 1) базовий політ
+    // Базовий повільний рух
     bx += vx;
     by += vy;
 
-    // 2) відбивання від країв (DVD)
-    if (bx <= minX){ bx = minX; vx = Math.abs(vx); }
-    if (bx >= maxX){ bx = maxX; vx = -Math.abs(vx); }
-    if (by <= minY){ by = minY; vy = Math.abs(vy); }
-    if (by >= maxY){ by = maxY; vy = -Math.abs(vy); }
+    // Відбивання від країв
+    if (bx <= minX || bx >= maxX) vx *= -1;
+    if (by <= minY || by >= maxY) vy *= -1;
 
-    // 3) паніка, якщо ніж близько: різко “втікає” в інший бік
+    // --- Реакція на ніж
     const dx = bx - mx;
     const dy = by - my;
     const dist = Math.hypot(dx, dy);
 
-    const panicRadius = 170;      // наскільки близько — паніка
-    const escapeBoost = 6.0;      // наскільки сильний ривок
-    const baseSpeed   = 3.6;      // базова швидкість після паніки
+    const panicRadius = 160;
+    const fleeStrength = 2.8; // швидше, але без істерики
 
-    if (panicCooldown > 0) panicCooldown--;
-
-    if (dist < panicRadius && panicCooldown === 0){
-      // напрямок від ножа
+    if (dist < panicRadius){
       const nx = dx / (dist || 1);
       const ny = dy / (dist || 1);
 
-      // ставимо швидкість в протилежний бік + буст
-      vx = nx * (baseSpeed + escapeBoost);
-      vy = ny * (baseSpeed + escapeBoost);
-
-      // і одразу “підштовхуємо” позицію, щоб відскочило відчутно
-      bx += nx * 60;
-      by += ny * 60;
-
-      // анти-спам (щоб не дригалось кожен кадр біля ножа)
-      panicCooldown = 18; // ~0.3 сек при 60fps
+      vx = nx * fleeStrength;
+      vy = ny * fleeStrength;
     }
 
-    // застосувати позицію (left/top — це центр, бо в CSS translate(-50%,-50%))
     bread.style.left = bx + "px";
     bread.style.top  = by + "px";
 
-    requestAnimationFrame(tick);
+    requestAnimationFrame(animate);
   }
 
-  tick();
-
-  window.addEventListener("resize", () => {
-    bx = clamp(bx, 0, window.innerWidth);
-    by = clamp(by, 0, window.innerHeight);
-    setKnife(clamp(mx, 0, window.innerWidth), clamp(my, 0, window.innerHeight));
-  });
+  animate();
 });
