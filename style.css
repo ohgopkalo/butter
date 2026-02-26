@@ -1,13 +1,12 @@
 :root{
-  --bg: #E6ADC3;
-  --size: 80px; /* ОДНА точка керування розміром для хліба і ножа */
+  --size: 80px; /* РОЗМІР І ХЛІБА, І НОЖА */
 }
 
 html, body{
   margin: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg);
+  background: #E6ADC3;
   overflow: hidden;
 }
 
@@ -15,7 +14,7 @@ html, body{
   position: relative;
   width: 100vw;
   height: 100vh;
-  cursor: none; /* ховаємо системний курсор */
+  cursor: none;
 }
 
 /* Спільні параметри */
@@ -33,8 +32,7 @@ html, body{
   transform: translate(-50%, -50%);
 }
 
-/* Ніж = курсор */
+/* Ніж */
 .knife{
-  /* щоб “вістря” було біля курсора — піджени ці % за відчуттям */
   transform: translate(-15%, -50%) rotate(-20deg);
 }
