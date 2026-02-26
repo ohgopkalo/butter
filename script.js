@@ -28,9 +28,9 @@ window.addEventListener("DOMContentLoaded", () => {
   let vy = baseSpeed * 0.75;
 
   // параметри страху
-  const fearRadius = 220;   // з якої відстані починає боятися
-  const maxBoost  = 2.2;    // максимально у скільки разів прискорюється
-  const steer     = 0.06;   // наскільки “керується” від ножа (м’якість)
+  const fearRadius = 300;   // з якої відстані починає боятися
+  const maxBoost  = 4;    // максимально у скільки разів прискорюється
+  const steer     = 0.10;   // наскільки “керується” від ножа (м’якість)
 
   function animate() {
     const half = bread.offsetWidth / 2;
