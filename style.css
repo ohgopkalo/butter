@@ -1,8 +1,13 @@
-html, body {
+:root{
+  --bg: #E6ADC3;
+  --size: 80px; /* ОДНА точка керування розміром для хліба і ножа */
+}
+
+html, body{
   margin: 0;
   width: 100%;
   height: 100%;
-  background: #E6ADC3;
+  background: var(--bg);
   overflow: hidden;
 }
 
@@ -10,26 +15,26 @@ html, body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  cursor: none;
+  cursor: none; /* ховаємо системний курсор */
 }
 
-.bread,
-.knife {
+/* Спільні параметри */
+.sprite{
   position: absolute;
-  width: 80px;   /* як у попередній версії */
+  width: var(--size);
   height: auto;
-  user-select: none;
   pointer-events: none;
+  user-select: none;
+  will-change: transform;
 }
 
+/* Хліб */
 .bread{
-  left: 50%;
-  top: 50%;
   transform: translate(-50%, -50%);
 }
 
+/* Ніж = курсор */
 .knife{
-  left: 0;
-  top: 0;
-  transform: translate(-30%, -20%) rotate(-20deg);
+  /* щоб “вістря” було біля курсора — піджени ці % за відчуттям */
+  transform: translate(-15%, -50%) rotate(-20deg);
 }
