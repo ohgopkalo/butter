@@ -1,12 +1,12 @@
-function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
-
 window.addEventListener("DOMContentLoaded", () => {
+
   const stage = document.getElementById("stage");
   const bread = document.getElementById("bread");
   const knife = document.getElementById("knife");
+
   if (!stage || !bread || !knife) return;
 
-  // ---- Ніж = курсор
+  // ----- НІЖ = курсор
   let mx = window.innerWidth / 2;
   let my = window.innerHeight / 2;
 
@@ -20,47 +20,45 @@ window.addEventListener("DOMContentLoaded", () => {
   knife.style.left = mx + "px";
   knife.style.top  = my + "px";
 
-  // ---- Хліб (спокійний політ)
+  // ----- ХЛІБ (спокійний DVD-рух)
+
   let bx = window.innerWidth / 2;
   let by = window.innerHeight / 2;
 
-  // В 3 рази повільніше
-  let vx = 1.0;
-  let vy = 0.8;
+  let vx = 0.9;   // повільний рух
+  let vy = 0.7;
 
   function animate(){
 
-    const rect = bread.getBoundingClientRect();
-    const halfW = rect.width / 2;
-    const halfH = rect.height / 2;
+    const half = bread.offsetWidth / 2;
 
-    const minX = halfW;
-    const maxX = window.innerWidth - halfW;
-    const minY = halfH;
-    const maxY = window.innerHeight - halfH;
+    const minX = half;
+    const maxX = window.innerWidth - half;
+    const minY = half;
+    const maxY = window.innerHeight - half;
 
-    // Базовий повільний рух
+    // спокійний рух
     bx += vx;
     by += vy;
 
-    // Відбивання від країв
+    // відбивання від країв
     if (bx <= minX || bx >= maxX) vx *= -1;
     if (by <= minY || by >= maxY) vy *= -1;
 
-    // --- Реакція на ніж
+    // реакція на ніж
     const dx = bx - mx;
     const dy = by - my;
     const dist = Math.hypot(dx, dy);
 
-    const panicRadius = 160;
-    const fleeStrength = 2.8; // швидше, але без істерики
+    const panicRadius = 150;
+    const fleeSpeed = 2.5; // трохи швидше ніж базовий
 
     if (dist < panicRadius){
       const nx = dx / (dist || 1);
       const ny = dy / (dist || 1);
 
-      vx = nx * fleeStrength;
-      vy = ny * fleeStrength;
+      vx = nx * fleeSpeed;
+      vy = ny * fleeSpeed;
     }
 
     bread.style.left = bx + "px";
