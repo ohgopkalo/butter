@@ -65,10 +65,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // відбивання від країв (м’яке)
     // анти-залипання в кут: м’яко відштовхуємо від країв
-if (bx < minX + 6) vx += wallPush;
-if (bx > maxX - 6) vx -= wallPush;
-if (by < minY + 6) vy += wallPush;
-if (by > maxY - 6) vy -= wallPush;
+    if (bx < minX + 6) vx += wallPush;
+    if (bx > maxX - 6) vx -= wallPush;
+    if (by < minY + 6) vy += wallPush;
+    if (by > maxY - 6) vy -= wallPush;
 
     bread.style.left = bx + "px";
     bread.style.top  = by + "px";
