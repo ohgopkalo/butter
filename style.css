@@ -34,5 +34,5 @@ html, body{
 
 /* Ніж */
 .knife{
-  transform: translate(-15%, -50%) rotate(-20deg);
+  transform: translate(-50%, -50%);
 }
