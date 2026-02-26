@@ -1,40 +1,69 @@
-// Function to toggle between dark and light modes
-function toggleMode() {
-    const body = document.body;
-    const modeToggle = document.getElementById('modeToggle');
-    const isDarkMode = body.classList.contains('dark-mode');
-
-    // Toggle the class based on the current mode
-    if (isDarkMode) {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-        modeToggle.innerHTML = '🌙'; // Switch to moon emoji for light mode
-        saveModePreference('light');
-    } else {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-        modeToggle.innerHTML = '☀️'; // Switch to sun emoji for dark mode
-        saveModePreference('dark');
-    }
+function toggleMode(){
+  const body = document.body;
+  const btn = document.getElementById("modeToggle");
+  const dark = body.classList.toggle("dark-mode");
+  body.classList.toggle("light-mode", !dark);
+  btn.textContent = dark ? "☀️" : "🌙";
 }
 
-// Function to save user's mode preference to local storage
-function saveModePreference(mode) {
-    localStorage.setItem('modePreference', mode);
-}
+function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
 
-// Function to retrieve user's mode preference from local storage on page load
-function retrieveModePreference() {
-    const savedMode = localStorage.getItem('modePreference');
-    if (savedMode) {
-        document.body.classList.add(savedMode + '-mode');
-        document.getElementById('modeToggle').innerHTML = savedMode === 'dark' ? '☀️' : '🌙';
-    }
-}
+window.addEventListener("DOMContentLoaded", () => {
+  const wrap = document.getElementById("wrapper");
+  const pet = document.getElementById("pet");
+  if (!wrap || !pet) return;
 
-// Event listener for page load to retrieve and apply user's mode preference
-window.addEventListener('DOMContentLoaded', retrieveModePreference);
-function init() { 
+  // позиція та ціль
+  let x = window.innerWidth / 2;
+  let y = window.innerHeight / 2;
+  let tx = x;
+  let ty = y;
+
+  // курсор (для "дивиться")
+  let mx = x;
+  let my = y;
+
+  const speed = 0.10; // більше = швидше
+
+  function tick(){
+    x += (tx - x) * speed;
+    y += (ty - y) * speed;
+
+    // щоб не виїжджало за екран (з урахуванням розміру картинки)
+    const rect = pet.getBoundingClientRect();
+    const halfW = rect.width / 2;
+    const halfH = rect.height / 2;
+
+    const cx = clamp(x, halfW, window.innerWidth - halfW);
+    const cy = clamp(y, halfH, window.innerHeight - halfH);
+
+    pet.style.left = `${cx}px`;
+    pet.style.top  = `${cy}px`;
+
+    // дивиться: просто фліп ліво/право за курсором
+    const faceLeft = mx < cx;
+    pet.style.transform = `translate(-50%, -50%) scaleX(${faceLeft ? -1 : 1})`;
+
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  wrap.addEventListener("mousemove", (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+  });
+
+  wrap.addEventListener("click", (e) => {
+    tx = e.clientX;
+    ty = e.clientY;
+  });
+
+  window.addEventListener("resize", () => {
+    // просто оновимо ціль в межах нового вікна
+    tx = clamp(tx, 0, window.innerWidth);
+    ty = clamp(ty, 0, window.innerHeight);
+  });
+});function init() { 
 
   const elements = {
     body: document.querySelector('.wrapper'),
