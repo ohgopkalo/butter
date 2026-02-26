@@ -1,14 +1,9 @@
-:root{
-  --box: 80px;     /* ОЦЕ ТВОЯ “ВИСОТА/РОЗМІР” = і хліб, і ніж */
-  --knife-size: 160px;
-  --bg: #E6ADC3;
-}
-
 html, body{
   margin: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
-  background: var(--bg);
+  background: #E6ADC3;
   overflow: hidden;
 }
 
@@ -19,39 +14,22 @@ html, body{
   cursor: none;
 }
 
-/* Контейнер 80x80 для КОЖНОГО спрайта */
-.sprite-box{
+/* ХЛІБ */
+#bread{
   position: absolute;
-  width: var(--box);
-  height: var(--box);
-  left: 50%;
-  top: 50%;
+  width: 80px;      /* ← чіткий розмір */
+  height: auto;
   transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
 }
 
-.bread{
-  width: var(--box);
-  height: var(--box);
-}
-
-.knife{
-  width: var(--knife-size);
-  height: var(--knife-size);
-  transform: translate(-15%, -50%) rotate(-20deg);
-}
-}
-
-/* Картинка всередині вміщується в квадрат пропорційно */
-.sprite-box > img{
-  width: 100%;
-  height: 100%;
-  object-fit: contain;   /* ключ! */
-  display: block;
-}
-
-/* Ніж як курсор: трошки повернемо, але вже сам квадрат 80x80 */
-.knife{
-  transform: translate(-15%, -50%) rotate(-20deg);
+/* НІЖ */
+#knife{
+  position: absolute;
+  width: 80px;      /* ← точно такий самий розмір */
+  height: auto;
+  transform: translate(-20%, -50%) rotate(-20deg);
+  pointer-events: none;
+  user-select: none;
 }
