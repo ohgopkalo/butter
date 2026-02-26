@@ -27,7 +27,7 @@ html, body{
 /* НІЖ */
 #knife{
   position: absolute;
-  width: 40px;      /* ← точно такий самий розмір */
+  width: 30px;      /* ← точно такий самий розмір */
   height: auto;
   transform: translate(-20%, -50%) rotate(-20deg);
   pointer-events: none;
