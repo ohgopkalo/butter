@@ -1,31 +1,32 @@
 window.addEventListener("DOMContentLoaded", () => {
 
-  const stage = document.getElementById("stage");
   const bread = document.getElementById("bread");
   const knife = document.getElementById("knife");
 
-  if (!stage || !bread || !knife) return;
+  if (!bread || !knife) return;
 
-  // ----- НІЖ = курсор
+  // ---- НІЖ = курсор (слухаємо весь документ)
   let mx = window.innerWidth / 2;
   let my = window.innerHeight / 2;
 
-  stage.addEventListener("mousemove", (e) => {
+  document.addEventListener("mousemove", (e) => {
     mx = e.clientX;
     my = e.clientY;
+
     knife.style.left = mx + "px";
     knife.style.top  = my + "px";
   });
 
+  // стартова позиція
   knife.style.left = mx + "px";
   knife.style.top  = my + "px";
 
-  // ----- ХЛІБ (спокійний DVD-рух)
+  // ---- ХЛІБ
 
   let bx = window.innerWidth / 2;
   let by = window.innerHeight / 2;
 
-  let vx = 0.9;   // повільний рух
+  let vx = 0.9;
   let vy = 0.7;
 
   function animate(){
@@ -37,21 +38,20 @@ window.addEventListener("DOMContentLoaded", () => {
     const minY = half;
     const maxY = window.innerHeight - half;
 
-    // спокійний рух
+    // базовий рух
     bx += vx;
     by += vy;
 
-    // відбивання від країв
     if (bx <= minX || bx >= maxX) vx *= -1;
     if (by <= minY || by >= maxY) vy *= -1;
 
-    // реакція на ніж
+    // втеча від ножа
     const dx = bx - mx;
     const dy = by - my;
     const dist = Math.hypot(dx, dy);
 
     const panicRadius = 150;
-    const fleeSpeed = 2.5; // трохи швидше ніж базовий
+    const fleeSpeed = 2.5;
 
     if (dist < panicRadius){
       const nx = dx / (dist || 1);
