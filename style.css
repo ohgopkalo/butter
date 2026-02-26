@@ -1,12 +1,13 @@
 :root{
-  --size: 80px; /* РОЗМІР І ХЛІБА, І НОЖА */
+  --box: 80px;     /* ОЦЕ ТВОЯ “ВИСОТА/РОЗМІР” = і хліб, і ніж */
+  --bg: #E6ADC3;
 }
 
 html, body{
   margin: 0;
   width: 100%;
   height: 100%;
-  background: #E6ADC3;
+  background: var(--bg);
   overflow: hidden;
 }
 
@@ -17,13 +18,28 @@ html, body{
   cursor: none;
 }
 
-/* Спільні параметри */
-.sprite{
+/* Контейнер 80x80 для КОЖНОГО спрайта */
+.sprite-box{
   position: absolute;
-  width: var(--size);
-  height: auto;
+  width: var(--box);
+  height: var(--box);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   pointer-events: none;
   user-select: none;
-  will-change: transform;
+  will-change: left, top, transform;
 }
 
+/* Картинка всередині вміщується в квадрат пропорційно */
+.sprite-box > img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* ключ! */
+  display: block;
+}
+
+/* Ніж як курсор: трошки повернемо, але вже сам квадрат 80x80 */
+.knife{
+  transform: translate(-15%, -50%) rotate(-20deg);
+}
